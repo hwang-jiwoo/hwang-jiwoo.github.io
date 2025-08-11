@@ -32,7 +32,7 @@
             padding: 1rem 0;
         }
         .navbar .navbar-brand {
-            color: #003366;
+            color: #fff;                 /* (요청 #3) 흰색 */
             font-weight: bold;
             font-size: 1.5rem;
             text-decoration: none;
@@ -46,13 +46,15 @@
         }
         .navbar-nav .nav-item { margin-left: 1.5rem; }
         .navbar-nav .nav-link {
-            color: #003366;
+            color: #fff;                 /* (요청 #3) 흰색 */
             text-decoration: none;
             font-weight: 500;
             font-size: 1.1rem;
-            transition: color 0.2s;
+            transition: opacity 0.2s;
         }
-        .navbar-nav .nav-link:hover { color: #ffd700; }
+        .navbar-nav .nav-link:hover { opacity: 0.8; }
+        /* (요청 #2) 좌상단 작은 흰색 UI(토글러) 제거 */
+        .navbar-toggler { display: none !important; }
 
         .container {
             max-width: 800px;
@@ -77,45 +79,45 @@
             h1 { font-size: 1.5rem; }
         }
 
-        /* ===== SPA & Publications ===== */
+        /* ===== SPA ===== */
         .page { display: none; }
         .page.active { display: block; }
 
-        /* 필터 영역 */
+        /* ===== Publications ===== */
         .pub-filters {
             display:flex; gap:10px; align-items:center; flex-wrap:wrap;
             margin: 0 0 12px 0;
         }
-        .pub-input, .pub-btn, .pub-chip {
+        .pub-input {
             background:#f3f6fb; border:1px solid #d9e2ef; color:#102a43;
-            padding:8px 10px; border-radius:10px; font-size:14px;
+            padding:8px 10px; border-radius:10px; font-size:14px; width:110px;
         }
-        .pub-btn { cursor:pointer; }
-        .pub-chip { display:inline-flex; gap:6px; align-items:center; cursor:pointer; user-select:none; }
-        .pub-chip input { margin:0; }
         .pub-fine { color:#66788a; font-size:13px; }
 
-        /* 연도 그룹 & 항목 */
+        /* 타입 필터: 버튼 탭 */
+        .pub-tabs { display:flex; gap:8px; flex-wrap:wrap; }
+        .pub-tab {
+            background:#f3f6fb; border:1px solid #d9e2ef; color:#102a43;
+            padding:8px 12px; border-radius:999px; font-size:14px; cursor:pointer;
+        }
+        .pub-tab[aria-pressed="true"] {
+            background:#203a59; color:#fff; border-color:#203a59; /* 선택 시 진한 색 */
+        }
+
         .pub-year { margin:18px 0 6px; font-size:20px; font-weight:700; color:#183a5d; }
         .pub-list { list-style:none; padding-left:0; margin:0 0 10px 0; }
-        .pub-item { margin: 10px 0; line-height:1.55; }
-        .pub-title { font-weight:600; }
-        .pub-venue { font-style:italic; }
-        .pub-type-badge {
-            display:inline-block; margin-left:6px; font-size:11px;
-            padding:2px 6px; border-radius:999px; background:#eef4ff; color:#275efe; border:1px solid #dbe6ff;
-        }
+        .pub-item { margin: 12px 0; line-height:1.6; }
+        .pub-title { font-weight:700; }
+        .pub-venue { font-style:italic; color:#2b465f; }
+        .pub-authors { color:#243b53; }
     </style>
 </head>
 <body>
     <div class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container" style="background:none; box-shadow:none; padding:0; max-width:none;">
             <a class="navbar-brand" href="#about">Hwang Jiwoo</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- 토글러 제거됨 -->
+            <div class="collapse navbar-collapse" id="navbarNav" style="display:block;">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="#publications">Publications</a></li>
@@ -156,15 +158,18 @@
             <div class="meny_template">
                 <h1 id="publications">Publications</h1>
 
-                <!-- 필터: [시작]-[종료] 연도, Type 체크 -->
+                <!-- 필터: [시작]-[종료] 연도, Type 탭 -->
                 <div class="pub-filters" aria-label="Publications Filters">
                     <input id="yearStart" class="pub-input" type="number" placeholder="Start" inputmode="numeric" min="1900" max="2100" />
                     <span class="pub-fine">–</span>
                     <input id="yearEnd" class="pub-input" type="number" placeholder="End" inputmode="numeric" min="1900" max="2100" />
-                    <label class="pub-chip"><input id="typeJournal" type="checkbox" checked> Journal</label>
-                    <label class="pub-chip"><input id="typeConference" type="checkbox" checked> Conference</label>
-                    <button id="applyFilters" class="pub-btn">Apply</button>
-                    <button id="clearFilters" class="pub-btn">Clear</button>
+
+                    <div class="pub-tabs" role="tablist" aria-label="Type filter">
+                        <button class="pub-tab" data-type="All" aria-pressed="true">All</button>
+                        <button class="pub-tab" data-type="Journal" aria-pressed="false">Journal</button>
+                        <button class="pub-tab" data-type="Conference" aria-pressed="false">Conference</button>
+                        <button class="pub-tab" data-type="Poster" aria-pressed="false">Poster</button>
+                    </div>
                 </div>
 
                 <!-- 연도별 그룹 렌더 영역 -->
@@ -176,18 +181,13 @@
     <!-- ===== SPA Router + Publications Loader/Renderer ===== -->
     <script>
       /* ---------- SPA Router ---------- */
-      const PAGES = {
-        about: 'menu_home',
-        publications: 'menu_publications'
-      };
+      const PAGES = { about: 'menu_home', publications: 'menu_publications' };
       function showPageByHash() {
         const hash = (location.hash || '#about').replace('#','');
         const targetId = PAGES[hash] || PAGES.about;
-
         document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
         document.getElementById(targetId).classList.add('active');
 
-        // 네비게이션 active 상태 (선택사항)
         document.querySelectorAll('.navbar .nav-link').forEach(a=>{
           const h = a.getAttribute('href').replace('#','');
           a.classList.toggle('active', h === hash);
@@ -196,7 +196,7 @@
       window.addEventListener('hashchange', showPageByHash);
       window.addEventListener('DOMContentLoaded', showPageByHash);
 
-      /* ---------- CSV/TSV Parser (조용히 실패) ---------- */
+      /* ---------- CSV/TSV Parser ---------- */
       function detectDelimiter(text) {
         const firstLine = text.split(/\r?\n/).find(l=>l.trim().length>0) || '';
         const commaCount = (firstLine.match(/,/g)||[]).length;
@@ -234,7 +234,7 @@
       }
 
       /* ---------- Publications State & Render ---------- */
-      const PUB = { raw: [], filtered: [], years: {min:null, max:null} };
+      const PUB = { raw: [], filtered: [], years: {min:null, max:null}, type: 'All' };
 
       function normalizeRows(rows){
         return rows.map(r => ({
@@ -245,7 +245,6 @@
           Authors: r.Authors
         })).filter(r => r.Title && r.Years);
       }
-
       function computeYearRange(list){
         const ys = list.map(r => parseInt(r.Years,10)).filter(n => !isNaN(n));
         if(!ys.length) return {min:null, max:null};
@@ -255,29 +254,17 @@
       function applyFilters(){
         const start = parseInt(document.getElementById('yearStart').value, 10);
         const end   = parseInt(document.getElementById('yearEnd').value, 10);
-        const wantJournal = document.getElementById('typeJournal').checked;
-        const wantConf    = document.getElementById('typeConference').checked;
+        const type  = PUB.type;
 
         PUB.filtered = PUB.raw.filter(it=>{
           const y = parseInt(it.Years,10);
           if(!isNaN(start) && y < start) return false;
           if(!isNaN(end) && y > end) return false;
-          if(!wantJournal && it.Types === 'Journal') return false;
-          if(!wantConf && it.Types === 'Conference') return false;
+          if(type !== 'All' && it.Types !== type) return false;
           return true;
         });
         renderGroups();
       }
-
-      function clearFilters(){
-        document.getElementById('yearStart').value = '';
-        document.getElementById('yearEnd').value = '';
-        document.getElementById('typeJournal').checked = true;
-        document.getElementById('typeConference').checked = true;
-        PUB.filtered = [...PUB.raw];
-        renderGroups();
-      }
-
       function renderGroups(){
         const wrap = document.getElementById('pubGroups');
         wrap.innerHTML = '';
@@ -300,11 +287,11 @@
           for(const it of byYear[y]){
             const li = document.createElement('li');
             li.className = 'pub-item';
+            /* (요청 #4) 제목 ↵ 정보 ↵ 저자 형식으로 렌더 */
             li.innerHTML = `
-              ${escapeHTML(it.Authors)}.
-              <span class="pub-title">“${escapeHTML(it.Title)}.”</span>
-              <span class="pub-venue">${escapeHTML(it.Information)}</span>
-              <span class="pub-type-badge">${escapeHTML(it.Types)}</span>
+              <div class="pub-title">${escapeHTML(it.Title)}</div>
+              <div class="pub-venue">${escapeHTML(it.Information)}</div>
+              <div class="pub-authors">${escapeHTML(it.Authors)}</div>
             `;
             ul.appendChild(li);
           }
@@ -313,7 +300,6 @@
           wrap.appendChild(ul);
         }
       }
-
       function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
       async function initPublications(){
@@ -322,8 +308,6 @@
           if(!res.ok) return; // 조용히 실패
           const text = await res.text();
           const { headers, data } = parseTable(text);
-
-          // 필수 헤더 확인 (없어도 조용히 무시)
           const needed = ['Types','Years','Title','Information','Authors'];
           if(!needed.every(h => headers.includes(h))) return;
 
@@ -331,32 +315,38 @@
           PUB.filtered = [...PUB.raw];
           PUB.years = computeYearRange(PUB.raw);
 
-          // 연도 입력 기본값 힌트 설정(placeholder)
+          // 연도 placeholder 설정
           const ys = document.getElementById('yearStart');
           const ye = document.getElementById('yearEnd');
           if(PUB.years.min) ys.placeholder = PUB.years.min;
           if(PUB.years.max) ye.placeholder = PUB.years.max;
 
           renderGroups();
-        }catch(e){
-          // 조용히 무시
-        }
+        }catch(e){ /* 조용히 무시 */ }
       }
 
       function bindFilterUI(){
-        document.getElementById('applyFilters').addEventListener('click', applyFilters);
-        document.getElementById('clearFilters').addEventListener('click', clearFilters);
+        // 타입 탭: 단일 선택
+        const tabs = document.querySelectorAll('.pub-tab');
+        tabs.forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            tabs.forEach(b=>b.setAttribute('aria-pressed','false'));
+            btn.setAttribute('aria-pressed','true');
+            PUB.type = btn.dataset.type;
+            applyFilters();
+          });
+        });
 
-        // Enter 키로 바로 적용
+        // 연도 입력: Enter 시 필터 적용
         ['yearStart','yearEnd'].forEach(id=>{
           document.getElementById(id).addEventListener('keydown', (e)=>{
             if(e.key === 'Enter') applyFilters();
           });
         });
 
-        // Type 체크 변경 시 즉시 적용
-        document.getElementById('typeJournal').addEventListener('change', applyFilters);
-        document.getElementById('typeConference').addEventListener('change', applyFilters);
+        // 연도 입력 변경 시 바로 적용(원하면 주석 해제)
+        document.getElementById('yearStart').addEventListener('change', applyFilters);
+        document.getElementById('yearEnd').addEventListener('change', applyFilters);
       }
 
       window.addEventListener('DOMContentLoaded', ()=>{
