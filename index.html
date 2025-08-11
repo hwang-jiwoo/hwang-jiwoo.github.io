@@ -1,358 +1,331 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>HWANG JIWOO | Personal website</title>
-    <meta content="Hwang Jiwoo | Personal Website" name="title">
-    <meta content="KNU,kangwon,research,phd,hci,hwang jiwoo,jiwoo hwang" name="keywords">
-    <meta content="Hwang Jiwoo" name="author">
-    <meta content="A personal website for Hwang Jiwoo" name="description">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta charset="utf-8" />
+  <title>HWANG JIWOO | Personal website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="title" content="Hwang Jiwoo | Personal Website" />
+  <meta name="keywords" content="KNU,kangwon,research,phd,hci,hwang jiwoo,jiwoo hwang" />
+  <meta name="author" content="Hwang Jiwoo" />
+  <meta name="description" content="A personal website for Hwang Jiwoo" />
+  <style>
+    :root{
+      --bg:#f8f9fa;
+      --ink:#222;
+      --brand:#ffffff;
+      --nav-bg:#2d3e50;
+      --link:#ffffff;
+      --link-hover:rgba(255,255,255,.85);
+      --card:#ffffff;
+      --shadow:0 2px 8px rgba(0,0,0,0.07);
+      --chip-bg:#f3f6fb; --chip-bd:#d9e2ef; --chip-ink:#102a43;
+      --tab-on-bg:#203a59; --tab-on-ink:#fff; --tab-off-bg:#f3f6fb; --tab-off-ink:#102a43; --tab-bd:#d9e2ef;
+      --venue:#2b465f; --authors:#243b53; --year:#183a5d;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,Arial}
+    a{color:inherit;text-decoration:none}
 
-    <!-- (필요시) 기존 의존성 유지 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-    <script crossorigin="anonymous" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    /* ===== Nav (mobile first) ===== */
+    .navbar{
+      position:sticky; top:0; z-index:10;
+      background:var(--nav-bg); color:var(--brand);
+      padding:12px 16px;
+    }
+    .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .brand{
+      font-weight:800; letter-spacing:.2px; color:var(--brand);
+      font-size:22px; line-height:1;
+    }
+    .nav-actions{display:flex; align-items:center; gap:8px}
+    .hamburger{
+      appearance:none; border:0; background:transparent; cursor:pointer; padding:8px; margin:-8px;
+    }
+    .hamburger .bar{
+      display:block; width:24px; height:2px; background:#fff; margin:5px 0; transition:transform .25s ease, opacity .25s ease;
+    }
+    .hamburger[aria-expanded="true"] .bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .hamburger[aria-expanded="true"] .bar:nth-child(2){opacity:0}
+    .hamburger[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
-    <script src="./js/custom.js" type="text/javascript"></script>
-    <script src="./js/publication.js" type="text/javascript"></script>
+    .nav-menu{
+      display:none;
+      background:var(--nav-bg);
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+    .nav-menu.open{display:block}
+    .nav-list{list-style:none;margin:0;padding:10px 16px;display:flex;flex-direction:column;gap:6px}
+    .nav-link{
+      color:var(--link); font-weight:700; font-size:18px; padding:10px 6px; display:block; border-radius:8px;
+    }
+    .nav-link:hover{color:var(--link-hover)}
+    .nav-link.active{outline:2px solid rgba(255,255,255,.25)}
 
-    <style>
-        body {
-            background: #f8f9fa;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            color: #222;
-        }
-        .navbar {
-            background: #2d3e50;
-            color: #fff;
-            padding: 1rem 0;
-        }
-        .navbar .navbar-brand {
-            color: #fff;                 /* (요청 #3) 흰색 */
-            font-weight: bold;
-            font-size: 1.5rem;
-            text-decoration: none;
-        }
-        .navbar-nav {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .navbar-nav .nav-item { margin-left: 1.5rem; }
-        .navbar-nav .nav-link {
-            color: #fff;                 /* (요청 #3) 흰색 */
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1.1rem;
-            transition: opacity 0.2s;
-        }
-        .navbar-nav .nav-link:hover { opacity: 0.8; }
-        /* (요청 #2) 좌상단 작은 흰색 UI(토글러) 제거 */
-        .navbar-toggler { display: none !important; }
+    /* Desktop nav */
+    @media (min-width: 900px){
+      .hamburger{display:none}
+      .nav-menu{display:block;background:transparent;border-top:0}
+      .nav-list{flex-direction:row; gap:18px; padding:0}
+      .nav-link{font-size:20px; padding:6px 8px}
+      .brand{font-size:28px}
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            padding: 2rem;
-        }
-        h1 { font-size: 2.2rem; font-weight: bold; margin-bottom: 1rem; }
+    /* ===== Layout ===== */
+    .container{
+      max-width:900px; margin:24px auto; padding:0 16px;
+    }
+    .card{
+      background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:24px;
+    }
+    h1{font-size:28px; font-weight:800; margin:0 0 14px}
+    @media (min-width:900px){ h1{font-size:34px} }
 
-        .ui-labels a {
-            display: inline-block; background: #0077cc; color: #fff;
-            padding: 0.4em 1em; border-radius: 20px; text-decoration: none;
-            margin: 0.3em 0.5em 0.3em 0; font-size: 1rem; transition: background 0.2s;
-        }
-        .ui-labels a:hover { background: #005fa3; }
-        .blockquote-footer { font-size: 0.95rem; color: #888; }
+    /* ===== SPA pages ===== */
+    .page{display:none}
+    .page.active{display:block}
 
-        @media (max-width: 600px) {
-            .container { padding: 1rem; }
-            h1 { font-size: 1.5rem; }
-        }
+    /* ===== About ===== */
+    .chips a{
+      display:inline-block;background:#0077cc;color:#fff;padding:.45em 1em;border-radius:999px;margin:.25em .35em .25em 0;
+      transition:opacity .2s;
+    }
+    .chips a:hover{opacity:.9}
+    .updated{color:#666;font-size:14px;margin-top:10px}
 
-        /* ===== SPA ===== */
-        .page { display: none; }
-        .page.active { display: block; }
+    /* ===== Publications ===== */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px}
+    .year-input{
+      background:var(--chip-bg); border:1px solid var(--chip-bd); color:var(--chip-ink);
+      padding:8px 10px; border-radius:10px; width:120px;
+    }
+    .dash{color:#66788a}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      background:var(--tab-off-bg); color:var(--tab-off-ink);
+      border:1px solid var(--tab-bd); border-radius:999px; padding:8px 12px; cursor:pointer; font-weight:700;
+    }
+    .tab[aria-pressed="true"]{background:var(--tab-on-bg); color:var(--tab-on-ink); border-color:var(--tab-on-bg)}
+    .year{margin:18px 0 6px;font-size:20px;font-weight:800;color:var(--year)}
+    .publist{list-style:none;margin:0 0 8px 0;padding:0}
+    .pubitem{margin:12px 0}
+    .title{font-weight:800}
+    .venue{font-style:italic;color:var(--venue);margin-top:2px}
+    .authors{color:var(--authors);margin-top:2px}
 
-        /* ===== Publications ===== */
-        .pub-filters {
-            display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-            margin: 0 0 12px 0;
-        }
-        .pub-input {
-            background:#f3f6fb; border:1px solid #d9e2ef; color:#102a43;
-            padding:8px 10px; border-radius:10px; font-size:14px; width:110px;
-        }
-        .pub-fine { color:#66788a; font-size:13px; }
-
-        /* 타입 필터: 버튼 탭 */
-        .pub-tabs { display:flex; gap:8px; flex-wrap:wrap; }
-        .pub-tab {
-            background:#f3f6fb; border:1px solid #d9e2ef; color:#102a43;
-            padding:8px 12px; border-radius:999px; font-size:14px; cursor:pointer;
-        }
-        .pub-tab[aria-pressed="true"] {
-            background:#203a59; color:#fff; border-color:#203a59; /* 선택 시 진한 색 */
-        }
-
-        .pub-year { margin:18px 0 6px; font-size:20px; font-weight:700; color:#183a5d; }
-        .pub-list { list-style:none; padding-left:0; margin:0 0 10px 0; }
-        .pub-item { margin: 12px 0; line-height:1.6; }
-        .pub-title { font-weight:700; }
-        .pub-venue { font-style:italic; color:#2b465f; }
-        .pub-authors { color:#243b53; }
-    </style>
+  </style>
 </head>
 <body>
-    <div class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container" style="background:none; box-shadow:none; padding:0; max-width:none;">
-            <a class="navbar-brand" href="#about">Hwang Jiwoo</a>
-            <!-- 토글러 제거됨 -->
-            <div class="collapse navbar-collapse" id="navbarNav" style="display:block;">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#publications">Publications</a></li>
-                </ul>
-            </div>
-        </div>
+  <!-- ===== NAV ===== -->
+  <nav class="navbar" role="navigation" aria-label="Primary">
+    <div class="nav-inner">
+      <a class="brand" href="#about">Hwang Jiwoo</a>
+      <div class="nav-actions">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+          <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </button>
+      </div>
     </div>
-
-    <!-- Home Page -->
-    <div class="container mt-5 page active" id="menu_home">
-        <div class="bs-docs-section">
-            <div class="meny_template">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 id="about">ABOUT</h1>
-                        <p>
-                            I am a Ph.D. student in the Graduate School of Data Science at Kangwon National University.
-                            I received my B.S. and M.S. degrees in Computer Science and Engineering from Kangwon National University.
-                            My research interests include various aspects of Human-Computer Interaction (HCI).
-                        </p>
-                        <br>
-                        <div class="ui-labels">
-                            <a class="ui-labels" href="https://scholar.google.co.kr/citations?hl=en&user=g8tiXdMAAAAJ" target="_blank">Google Scholar</a>
-                        </div>
-                        <blockquote class="blockquote text-right">
-                            <p class="mb-0"></p>
-                            <footer class="blockquote-footer">Updated 1 Aug, 2025</footer>
-                        </blockquote>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="nav-menu" id="navMenu">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="#about">About</a></li>
+        <li><a class="nav-link" href="#publications">Publications</a></li>
+      </ul>
     </div>
+  </nav>
 
-    <!-- Publications Page -->
-    <div class="container mt-5 page" id="menu_publications">
-        <div class="bs-docs-section">
-            <div class="meny_template">
-                <h1 id="publications">Publications</h1>
+  <!-- ===== ABOUT ===== -->
+  <main class="container page active" id="menu_home">
+    <section class="card">
+      <h1 id="about">ABOUT</h1>
+      <p>
+        I am a Ph.D. student in the Graduate School of Data Science at Kangwon National University.
+        I received my B.S. and M.S. degrees in Computer Science and Engineering from Kangwon National University.
+        My research interests include various aspects of Human-Computer Interaction (HCI).
+      </p>
+      <div class="chips">
+        <a href="https://scholar.google.co.kr/citations?hl=en&user=g8tiXdMAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
+      </div>
+      <div class="updated">Updated 11 Aug, 2025</div>
+    </section>
+  </main>
 
-                <!-- 필터: [시작]-[종료] 연도, Type 탭 -->
-                <div class="pub-filters" aria-label="Publications Filters">
-                    <input id="yearStart" class="pub-input" type="number" placeholder="Start" inputmode="numeric" min="1900" max="2100" />
-                    <span class="pub-fine">–</span>
-                    <input id="yearEnd" class="pub-input" type="number" placeholder="End" inputmode="numeric" min="1900" max="2100" />
+  <!-- ===== PUBLICATIONS ===== -->
+  <section class="container page" id="menu_publications">
+    <div class="card">
+      <h1 id="publications">Publications</h1>
 
-                    <div class="pub-tabs" role="tablist" aria-label="Type filter">
-                        <button class="pub-tab" data-type="All" aria-pressed="true">All</button>
-                        <button class="pub-tab" data-type="Journal" aria-pressed="false">Journal</button>
-                        <button class="pub-tab" data-type="Conference" aria-pressed="false">Conference</button>
-                        <button class="pub-tab" data-type="Poster" aria-pressed="false">Poster</button>
-                    </div>
-                </div>
-
-                <!-- 연도별 그룹 렌더 영역 -->
-                <div id="pubGroups"></div>
-            </div>
+      <!-- Filters: year range + type -->
+      <div class="filters" aria-label="Publications filters">
+        <input id="yearStart" class="year-input" type="number" inputmode="numeric" placeholder="Start" min="1900" max="2100" />
+        <span class="dash">–</span>
+        <input id="yearEnd" class="year-input" type="number" inputmode="numeric" placeholder="End" min="1900" max="2100" />
+        <div class="tabs" role="tablist" aria-label="Type filter">
+          <button class="tab" data-type="All" aria-pressed="true">All</button>
+          <button class="tab" data-type="Journal" aria-pressed="false">Journal</button>
+          <button class="tab" data-type="Conference" aria-pressed="false">Conference</button>
+          <button class="tab" data-type="Poster" aria-pressed="false">Poster</button>
         </div>
+      </div>
+
+      <!-- Render area -->
+      <div id="pubGroups"></div>
     </div>
+  </section>
 
-    <!-- ===== SPA Router + Publications Loader/Renderer ===== -->
-    <script>
-      /* ---------- SPA Router ---------- */
-      const PAGES = { about: 'menu_home', publications: 'menu_publications' };
-      function showPageByHash() {
-        const hash = (location.hash || '#about').replace('#','');
-        const targetId = PAGES[hash] || PAGES.about;
-        document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-        document.getElementById(targetId).classList.add('active');
-
-        document.querySelectorAll('.navbar .nav-link').forEach(a=>{
-          const h = a.getAttribute('href').replace('#','');
-          a.classList.toggle('active', h === hash);
-        });
-      }
-      window.addEventListener('hashchange', showPageByHash);
-      window.addEventListener('DOMContentLoaded', showPageByHash);
-
-      /* ---------- CSV/TSV Parser ---------- */
-      function detectDelimiter(text) {
-        const firstLine = text.split(/\r?\n/).find(l=>l.trim().length>0) || '';
-        const commaCount = (firstLine.match(/,/g)||[]).length;
-        const tabCount   = (firstLine.match(/\t/g)||[]).length;
-        return tabCount > commaCount ? '\t' : ',';
-      }
-      function parseDelimited(text, delimiter) {
-        const rows = [];
-        let i=0, field='', row=[], inQuotes=false, d=delimiter;
-        while(i<text.length){
-          const ch=text[i];
-          if(ch === '"'){
-            if(inQuotes && text[i+1] === '"'){ field+='"'; i+=2; continue; }
-            inQuotes=!inQuotes; i++; continue;
-          }
-          if(!inQuotes && ch===d){ row.push(field); field=''; i++; continue; }
-          if(!inQuotes && ch==='\n'){ row.push(field); rows.push(row); row=[]; field=''; i++; continue; }
-          if(!inQuotes && ch==='\r'){ i++; continue; }
-          field+=ch; i++;
-        }
-        if(field.length || row.length){ row.push(field); rows.push(row); }
-        return rows.filter(r => r.some(c => (c||'').trim().length));
-      }
-      function parseTable(text) {
-        const delim = detectDelimiter(text);
-        const rows = parseDelimited(text, delim);
-        if(!rows.length) return { headers:[], data:[] };
-        const headers = rows[0].map(h => (h||'').trim());
-        const data = rows.slice(1).map(r => {
-          const obj = {};
-          headers.forEach((h, idx) => obj[h] = (r[idx] ?? '').trim());
-          return obj;
-        });
-        return { headers, data };
-      }
-
-      /* ---------- Publications State & Render ---------- */
-      const PUB = { raw: [], filtered: [], years: {min:null, max:null}, type: 'All' };
-
-      function normalizeRows(rows){
-        return rows.map(r => ({
-          Types: r.Types,
-          Years: (r.Years||'').replace(/[^\d]/g,''),
-          Title: r.Title,
-          Information: r.Information,
-          Authors: r.Authors
-        })).filter(r => r.Title && r.Years);
-      }
-      function computeYearRange(list){
-        const ys = list.map(r => parseInt(r.Years,10)).filter(n => !isNaN(n));
-        if(!ys.length) return {min:null, max:null};
-        return { min: Math.min(...ys), max: Math.max(...ys) };
-      }
-
-      function applyFilters(){
-        const start = parseInt(document.getElementById('yearStart').value, 10);
-        const end   = parseInt(document.getElementById('yearEnd').value, 10);
-        const type  = PUB.type;
-
-        PUB.filtered = PUB.raw.filter(it=>{
-          const y = parseInt(it.Years,10);
-          if(!isNaN(start) && y < start) return false;
-          if(!isNaN(end) && y > end) return false;
-          if(type !== 'All' && it.Types !== type) return false;
-          return true;
-        });
-        renderGroups();
-      }
-      function renderGroups(){
-        const wrap = document.getElementById('pubGroups');
-        wrap.innerHTML = '';
-
-        // 연도 desc로 그룹핑
-        const byYear = {};
-        for(const r of PUB.filtered){
-          (byYear[r.Years] = byYear[r.Years] || []).push(r);
-        }
-        const years = Object.keys(byYear).sort((a,b)=>parseInt(b)-parseInt(a));
-
-        for(const y of years){
-          const h = document.createElement('div');
-          h.className = 'pub-year';
-          h.textContent = y;
-
-          const ul = document.createElement('ul');
-          ul.className = 'pub-list';
-
-          for(const it of byYear[y]){
-            const li = document.createElement('li');
-            li.className = 'pub-item';
-            /* (요청 #4) 제목 ↵ 정보 ↵ 저자 형식으로 렌더 */
-            li.innerHTML = `
-              <div class="pub-title">${escapeHTML(it.Title)}</div>
-              <div class="pub-venue">${escapeHTML(it.Information)}</div>
-              <div class="pub-authors">${escapeHTML(it.Authors)}</div>
-            `;
-            ul.appendChild(li);
-          }
-
-          wrap.appendChild(h);
-          wrap.appendChild(ul);
-        }
-      }
-      function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-      async function initPublications(){
-        try{
-          const res = await fetch('publications.csv', { cache:'no-store' });
-          if(!res.ok) return; // 조용히 실패
-          const text = await res.text();
-          const { headers, data } = parseTable(text);
-          const needed = ['Types','Years','Title','Information','Authors'];
-          if(!needed.every(h => headers.includes(h))) return;
-
-          PUB.raw = normalizeRows(data);
-          PUB.filtered = [...PUB.raw];
-          PUB.years = computeYearRange(PUB.raw);
-
-          // 연도 placeholder 설정
-          const ys = document.getElementById('yearStart');
-          const ye = document.getElementById('yearEnd');
-          if(PUB.years.min) ys.placeholder = PUB.years.min;
-          if(PUB.years.max) ye.placeholder = PUB.years.max;
-
-          renderGroups();
-        }catch(e){ /* 조용히 무시 */ }
-      }
-
-      function bindFilterUI(){
-        // 타입 탭: 단일 선택
-        const tabs = document.querySelectorAll('.pub-tab');
-        tabs.forEach(btn=>{
-          btn.addEventListener('click', ()=>{
-            tabs.forEach(b=>b.setAttribute('aria-pressed','false'));
-            btn.setAttribute('aria-pressed','true');
-            PUB.type = btn.dataset.type;
-            applyFilters();
-          });
-        });
-
-        // 연도 입력: Enter 시 필터 적용
-        ['yearStart','yearEnd'].forEach(id=>{
-          document.getElementById(id).addEventListener('keydown', (e)=>{
-            if(e.key === 'Enter') applyFilters();
-          });
-        });
-
-        // 연도 입력 변경 시 바로 적용(원하면 주석 해제)
-        document.getElementById('yearStart').addEventListener('change', applyFilters);
-        document.getElementById('yearEnd').addEventListener('change', applyFilters);
-      }
-
-      window.addEventListener('DOMContentLoaded', ()=>{
-        bindFilterUI();
-        initPublications();
+  <script>
+    /* ===== SPA Router ===== */
+    const PAGES = { about:'menu_home', publications:'menu_publications' };
+    function showPageByHash(){
+      const hash = (location.hash || '#about').replace('#','');
+      const target = PAGES[hash] || PAGES.about;
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById(target).classList.add('active');
+      document.querySelectorAll('.nav-link').forEach(a=>{
+        const h = a.getAttribute('href').replace('#','');
+        a.classList.toggle('active', h===hash);
       });
-    </script>
+      // close mobile menu on navigation
+      closeMenu();
+    }
+    window.addEventListener('hashchange', showPageByHash);
+
+    /* ===== Mobile Nav ===== */
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    function closeMenu(){
+      hamburger.setAttribute('aria-expanded','false');
+      navMenu.classList.remove('open');
+    }
+    function toggleMenu(){
+      const open = hamburger.getAttribute('aria-expanded') === 'true';
+      hamburger.setAttribute('aria-expanded', String(!open));
+      navMenu.classList.toggle('open', !open);
+    }
+    hamburger.addEventListener('click', toggleMenu);
+    // close if click outside (mobile)
+    document.addEventListener('click', (e)=>{
+      if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) closeMenu();
+    });
+
+    /* ===== CSV/TSV Parser ===== */
+    function detectDelimiter(text){
+      const first = text.split(/\r?\n/).find(l=>l.trim().length>0) || '';
+      const c = (first.match(/,/g)||[]).length, t=(first.match(/\t/g)||[]).length;
+      return t>c ? '\t' : ',';
+    }
+    function parseDelimited(text, d){
+      const rows=[]; let i=0, f='', r=[], q=false;
+      while(i<text.length){
+        const ch=text[i];
+        if(ch === '"'){ if(q && text[i+1] === '"'){ f+='"'; i+=2; continue; } q=!q; i++; continue; }
+        if(!q && ch===d){ r.push(f); f=''; i++; continue; }
+        if(!q && ch==='\n'){ r.push(f); rows.push(r); r=[]; f=''; i++; continue; }
+        if(!q && ch==='\r'){ i++; continue; }
+        f+=ch; i++;
+      }
+      if(f.length || r.length){ r.push(f); rows.push(r); }
+      return rows.filter(row=>row.some(c=>(c||'').trim().length));
+    }
+    function parseTable(text){
+      const delim = detectDelimiter(text);
+      const rows = parseDelimited(text, delim);
+      if(!rows.length) return {headers:[], data:[]};
+      const headers = rows[0].map(h=>(h||'').trim());
+      const data = rows.slice(1).map(r=>{
+        const o={}; headers.forEach((h,idx)=>o[h]=(r[idx]??'').trim()); return o;
+      });
+      return {headers, data};
+    }
+
+    /* ===== Publications ===== */
+    const PUB = { raw:[], filtered:[], type:'All', years:{min:null,max:null} };
+    function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function normalizeRows(rows){
+      return rows.map(r=>({
+        Types:r.Types, Years:(r.Years||'').replace(/[^\d]/g,''), Title:r.Title, Information:r.Information, Authors:r.Authors
+      })).filter(r=>r.Title && r.Years);
+    }
+    function computeYearRange(list){
+      const ys=list.map(r=>parseInt(r.Years,10)).filter(n=>!isNaN(n));
+      return ys.length?{min:Math.min(...ys),max:Math.max(...ys)}:{min:null,max:null};
+    }
+    function renderGroups(){
+      const wrap=document.getElementById('pubGroups'); wrap.innerHTML='';
+      const groups={};
+      for(const it of PUB.filtered){ (groups[it.Years] = groups[it.Years] || []).push(it); }
+      const years=Object.keys(groups).sort((a,b)=>parseInt(b)-parseInt(a));
+      for(const y of years){
+        const h=document.createElement('div'); h.className='year'; h.textContent=y;
+        const ul=document.createElement('ul'); ul.className='publist';
+        for(const it of groups[y]){
+          const li=document.createElement('li'); li.className='pubitem';
+          li.innerHTML = `
+            <div class="title">${escapeHTML(it.Title)}</div>
+            <div class="venue">${escapeHTML(it.Information)}</div>
+            <div class="authors">${escapeHTML(it.Authors)}</div>
+          `;
+          ul.appendChild(li);
+        }
+        wrap.appendChild(h); wrap.appendChild(ul);
+      }
+    }
+    function applyFilters(){
+      const s=parseInt(document.getElementById('yearStart').value,10);
+      const e=parseInt(document.getElementById('yearEnd').value,10);
+      const type=PUB.type;
+      PUB.filtered = PUB.raw.filter(it=>{
+        const y=parseInt(it.Years,10);
+        if(!isNaN(s) && y<s) return false;
+        if(!isNaN(e) && y>e) return false;
+        if(type!=='All' && it.Types!==type) return false;
+        return true;
+      });
+      renderGroups();
+    }
+
+    function bindPublicationUI(){
+      // Type tabs
+      const tabs=document.querySelectorAll('.tab');
+      tabs.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          tabs.forEach(b=>b.setAttribute('aria-pressed','false'));
+          btn.setAttribute('aria-pressed','true');
+          PUB.type = btn.dataset.type;
+          applyFilters();
+        });
+      });
+      // Year inputs
+      ['yearStart','yearEnd'].forEach(id=>{
+        const el=document.getElementById(id);
+        el.addEventListener('change', applyFilters);
+        el.addEventListener('keydown', e=>{ if(e.key==='Enter') applyFilters(); });
+      });
+    }
+
+    async function initPublications(){
+      try{
+        const res = await fetch('publications.csv', {cache:'no-store'});
+        if(!res.ok) return;
+        const text = await res.text();
+        const {headers,data} = parseTable(text);
+        const needed=['Types','Years','Title','Information','Authors'];
+        if(!needed.every(h=>headers.includes(h))) return;
+
+        PUB.raw = normalizeRows(data);
+        PUB.filtered=[...PUB.raw];
+        PUB.years = computeYearRange(PUB.raw);
+        if(PUB.years.min) document.getElementById('yearStart').placeholder = PUB.years.min;
+        if(PUB.years.max) document.getElementById('yearEnd').placeholder = PUB.years.max;
+        renderGroups();
+      }catch(_e){/* silent */}
+    }
+
+    // init
+    window.addEventListener('DOMContentLoaded', ()=>{
+      showPageByHash();
+      bindPublicationUI();
+      initPublications();
+    });
+  </script>
 </body>
 </html>
