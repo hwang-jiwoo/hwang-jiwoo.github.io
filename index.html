@@ -94,6 +94,22 @@
                 font-size: 1.5rem;
             }
         }
+
+        /* ===== Publications 전용 스타일(네임스페이스 .pub-*) ===== */
+        .pub-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:14px 0 18px}
+        .pub-select,.pub-btn{background:#f3f6fb;border:1px solid #d9e2ef;color:#102a43;padding:8px 10px;border-radius:10px}
+        .pub-btn{cursor:pointer}
+        .pub-btn[aria-pressed="true"]{outline:2px solid #4ea1ff}
+        .pub-muted{color:#66788a}
+        .pub-wrap{overflow:auto;border-radius:12px;border:1px solid #e6ecf5}
+        .pub-table{width:100%;border-collapse:collapse;background:#fff}
+        .pub-table th,.pub-table td{padding:12px 14px;vertical-align:top;border-bottom:1px solid #e6ecf5}
+        .pub-table th{font-weight:600;text-align:left;background:#f8fbff;position:sticky;top:0;z-index:1}
+        .pub-type{display:inline-block;padding:3px 8px;border:1px solid #e6ecf5;border-radius:999px;background:#f2f7ff;font-size:12px;color:#275efe}
+        .pub-error{padding:12px 14px;border:1px solid #e0b4b4;background:#fff6f6;color:#912d2b;border-radius:10px}
+        @media (max-width:720px){
+            .pub-table th:nth-child(4), .pub-table td:nth-child(4){display:none;} /* Information 열 모바일 숨김 */
+        }
     </style>
 </head>
 <body>
@@ -109,7 +125,8 @@
                         <a class="nav-link" href="#about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#publications">Projects</a>
+                        <!-- 기존 'Projects' 링크를 Publications 앵커로 연결 -->
+                        <a class="nav-link" href="#publications">Publications</a>
                     </li>
                 </ul>
             </div>
@@ -120,7 +137,7 @@
             <div class="meny_template" id="menu_home">
                 <div class="row">
                     <div class="col-md-12">
-                                <h1>ABOUT</h1>
+                                <h1 id="about">ABOUT</h1>
                                 <p>I am a Ph.D. student in the Graduate School of Data Science at Kangwon National University.
                                 I received my B.S. and M.S. degrees in Computer Science and Engineering from Kangwon National University.
                                 My research interests include various aspects of Human-Computer Interaction (HCI).
@@ -137,13 +154,196 @@
                 </div>
             </div>
         </div>
+
+        <!-- ===== Publications 섹션 ===== -->
         <div class="bs-docs-section">
             <div class="meny_template" id="menu_publications">
-                <p>* Google Scholar: <a href="https://scholar.google.co.kr/citations?hl=en&user=g8tiXdMAAAAJ" target="_blank">"https://scholar.google.co.kr/citations?hl=en&user=g8tiXdMAAAAJ"</a></p>
-                <br>
+                <h1 id="publications">Publications</h1>
+
+                <div class="pub-controls" role="group" aria-label="정렬 옵션">
+                    <label>
+                      <span class="sr-only">정렬 기준</span>
+                      <select id="pub-sortKey" class="pub-select" aria-label="정렬 기준">
+                        <option value="Years" selected>Years</option>
+                        <option value="Types">Types</option>
+                        <option value="Title">Title</option>
+                      </select>
+                    </label>
+                    <button id="pub-dirDesc" class="pub-btn" aria-pressed="true" aria-label="내림차순">내림차순</button>
+                    <button id="pub-dirAsc" class="pub-btn" aria-pressed="false" aria-label="오름차순">오름차순</button>
+                    <span class="pub-muted">파일: <code>publications.csv</code></span>
+                </div>
+
+                <div id="pub-error" class="pub-error" style="display:none"></div>
+
+                <div class="pub-wrap">
+                    <table class="pub-table" id="pub-table" aria-describedby="pub-helper">
+                        <thead>
+                            <tr>
+                                <th scope="col">Types</th>
+                                <th scope="col">Years</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Information</th>
+                                <th scope="col">Authors</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pub-body">
+                            <!-- rows injected -->
+                        </tbody>
+                    </table>
+                </div>
+                <p id="pub-helper" class="pub-muted" style="margin-top:10px">
+                    상단 컨트롤로 정렬하세요. (모바일: Information 열 숨김)
+                </p>
             </div>
         </div>
     </div>
 
+    <!-- ===== Publications CSV 로더/렌더러 ===== -->
+    <script>
+      // --- CSV/TSV 자동 감지 파서 ---
+      function detectDelimiter(text) {
+        const firstLine = text.split(/\r?\n/).find(l=>l.trim().length>0) || '';
+        const commaCount = (firstLine.match(/,/g)||[]).length;
+        const tabCount   = (firstLine.match(/\t/g)||[]).length;
+        return tabCount > commaCount ? '\t' : ',';
+      }
+      function parseDelimited(text, delimiter) {
+        const rows = [];
+        let i=0, field='', row=[], inQuotes=false, d=delimiter;
+        while(i<text.length){
+          const ch=text[i];
+          if(ch === '"'){
+            if(inQuotes && text[i+1] === '"'){ field+='"'; i+=2; continue; }
+            inQuotes=!inQuotes; i++; continue;
+          }
+          if(!inQuotes && ch===d){ row.push(field); field=''; i++; continue; }
+          if(!inQuotes && ch==='\n'){ row.push(field); rows.push(row); row=[]; field=''; i++; continue; }
+          if(!inQuotes && ch==='\r'){ i++; continue; }
+          field+=ch; i++;
+        }
+        if(field.length || row.length){ row.push(field); rows.push(row); }
+        return rows.filter(r => r.some(c => (c||'').trim().length));
+      }
+      function parseTable(text) {
+        const delim = detectDelimiter(text);
+        const rows = parseDelimited(text, delim);
+        if(!rows.length) return { headers:[], data:[] };
+        const headers = rows[0].map(h => (h||'').trim());
+        const data = rows.slice(1).map(r => {
+          const obj = {};
+          headers.forEach((h, idx) => obj[h] = (r[idx] ?? '').trim());
+          return obj;
+        });
+        return { headers, data };
+      }
+      // --- State & Utils ---
+      const pubState = { data: [], sortKey: 'Years', sortDir: 'desc' };
+      function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+      function smartCompare(a,b){ return String(a).localeCompare(String(b), undefined, { numeric:true, sensitivity:'base' }); }
+      function sortData(){
+        const { sortKey, sortDir } = pubState;
+        const d = [...pubState.data];
+        d.sort((A,B)=>{
+          let a=A[sortKey]??'', b=B[sortKey]??'';
+          if(sortKey==='Years'){
+            const an=parseInt(a,10), bn=parseInt(b,10);
+            if(!isNaN(an)&&!isNaN(bn)) return sortDir==='asc' ? (an-bn) : (bn-an);
+          }
+          if(sortKey==='Types'){
+            const rank = t => ({'Journal':0,'Conference':1}[t] ?? 9);
+            const r = rank(a) - rank(b);
+            if(r!==0) return sortDir==='asc' ? r : -r;
+          }
+          const cmp = smartCompare(a,b);
+          return sortDir==='asc' ? cmp : -cmp;
+        });
+        return d;
+      }
+      function renderTable(){
+        const tbody = document.getElementById('pub-body');
+        tbody.innerHTML='';
+        const rows = sortData();
+        const frag = document.createDocumentFragment();
+        for(const row of rows){
+          const tr = document.createElement('tr');
+
+          const tdType = document.createElement('td');
+          tdType.innerHTML = `<span class="pub-type">${escapeHTML(row.Types||'')}</span>`;
+          tr.appendChild(tdType);
+
+          const tdYear = document.createElement('td');
+          tdYear.textContent = row.Years || '';
+          tr.appendChild(tdYear);
+
+          const tdTitle = document.createElement('td');
+          tdTitle.innerHTML = escapeHTML(row.Title||'');
+          tr.appendChild(tdTitle);
+
+          const tdInfo = document.createElement('td');
+          tdInfo.textContent = row.Information || '';
+          tr.appendChild(tdInfo);
+
+          const tdAuthors = document.createElement('td');
+          tdAuthors.textContent = row.Authors || '';
+          tr.appendChild(tdAuthors);
+
+          frag.appendChild(tr);
+        }
+        tbody.appendChild(frag);
+      }
+      function bindControls(){
+        const sortKey = document.getElementById('pub-sortKey');
+        const dirAsc  = document.getElementById('pub-dirAsc');
+        const dirDesc = document.getElementById('pub-dirDesc');
+
+        sortKey.addEventListener('change', ()=>{
+          pubState.sortKey = sortKey.value;
+          renderTable();
+        });
+        function setDir(dir){
+          pubState.sortDir = dir;
+          dirAsc.setAttribute('aria-pressed', dir==='asc');
+          dirDesc.setAttribute('aria-pressed', dir==='desc');
+          renderTable();
+        }
+        dirAsc.addEventListener('click', ()=>setDir('asc'));
+        dirDesc.addEventListener('click', ()=>setDir('desc'));
+      }
+      async function initPublications(){
+        bindControls();
+        try{
+          const res = await fetch('publications.csv', { cache:'no-store' });
+          if(!res.ok) throw new Error(`HTTP ${res.status}`);
+          const text = await res.text();
+          const { headers, data } = parseTable(text);
+
+          const needed = ['Types','Years','Title','Information','Authors'];
+          const missing = needed.filter(h => !headers.includes(h));
+          if(missing.length) throw new Error(`CSV 헤더 누락: ${missing.join(', ')}`);
+
+          pubState.data = data.map(r=>({
+            Types: r.Types,
+            Years: (r.Years||'').replace(/[^\d]/g,''),
+            Title: r.Title,
+            Information: r.Information,
+            Authors: r.Authors
+          }));
+          pubState.sortKey='Years'; pubState.sortDir='desc';
+          document.getElementById('pub-sortKey').value='Years';
+          document.getElementById('pub-dirAsc').setAttribute('aria-pressed','false');
+          document.getElementById('pub-dirDesc').setAttribute('aria-pressed','true');
+          renderTable();
+        }catch(err){
+          const el = document.getElementById('pub-error');
+          el.style.display='';
+          el.textContent = `Publications를 불러오지 못했습니다: ${err.message}.
+- 파일명이 'publications.csv'인지
+- UTF-8로 저장했는지
+- 쉼표(,) 또는 탭(\\t)으로 구분되어 있는지 확인하세요.`;
+        }
+      }
+      initPublications();
+    </script>
 </body>
 </html>
