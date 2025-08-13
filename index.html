@@ -8,94 +8,26 @@
   <meta name="keywords" content="KNU,kangwon,research,phd,hci,hwang jiwoo,jiwoo hwang" />
   <meta name="author" content="Hwang Jiwoo" />
   <meta name="description" content="A personal website for Hwang Jiwoo" />
-  <style>
-    :root{
-      --bg:#f8f9fa; --ink:#222; --brand:#ffffff; --nav-bg:#2d3e50;
-      --link:#ffffff; --link-hover:rgba(255,255,255,.85);
-      --card:#ffffff; --shadow:0 2px 8px rgba(0,0,0,0.07);
-      --chip-bg:#f3f6fb; --chip-bd:#d9e2ef; --chip-ink:#102a43;
-      --tab-on-bg:#203a59; --tab-on-ink:#fff; --tab-off-bg:#f3f6fb; --tab-off-ink:#102a43; --tab-bd:#d9e2ef;
-      --venue:#2b465f; --authors:#243b53; --year:#183a5d;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Malgun Gothic,Arial}
-    a{color:inherit;text-decoration:none}
-
-    /* ===== Nav (mobile first) ===== */
-    .navbar{
-      position:sticky; top:0; z-index:10;
-      background:var(--nav-bg); color:var(--brand);
-      padding:12px 16px;
-    }
-    .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-    .brand{font-weight:800; letter-spacing:.2px; color:var(--brand); font-size:22px; line-height:1;}
-    .nav-actions{display:flex; align-items:center; gap:8px}
-    .hamburger{appearance:none; border:0; background:transparent; cursor:pointer; padding:8px; margin:-8px;}
-    .hamburger .bar{display:block; width:24px; height:2px; background:#fff; margin:5px 0; transition:transform .25s ease, opacity .25s ease;}
-    .hamburger[aria-expanded="true"] .bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
-    .hamburger[aria-expanded="true"] .bar:nth-child(2){opacity:0}
-    .hamburger[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-    .nav-menu{display:none;background:var(--nav-bg);border-top:1px solid rgba(255,255,255,.1);}
-    .nav-menu.open{display:block}
-    .nav-list{list-style:none;margin:0;padding:10px 16px;display:flex;flex-direction:column;gap:6px}
-    .nav-link{color:var(--link); font-weight:700; font-size:18px; padding:10px 6px; display:block; border-radius:8px;}
-    .nav-link:hover{color:var(--link-hover)}
-    .nav-link.active{outline:2px solid rgba(255,255,255,.25)}
-    @media (min-width: 900px){
-      .hamburger{display:none}
-      .nav-menu{display:block;background:transparent;border-top:0}
-      .nav-list{flex-direction:row; gap:18px; padding:0}
-      .nav-link{font-size:20px; padding:6px 8px}
-      .brand{font-size:28px}
-    }
-
-    /* ===== Layout ===== */
-    .container{max-width:900px; margin:24px auto; padding:0 16px;}
-    .card{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:24px;}
-    h1{font-size:28px; font-weight:800; margin:0 0 14px}
-    @media (min-width:900px){ h1{font-size:34px} }
-
-    /* ===== SPA ===== */
-    .page{display:none}
-    .page.active{display:block}
-
-    /* ===== About ===== */
-    .chips a{display:inline-block;background:#0077cc;color:#fff;padding:.45em 1em;border-radius:999px;margin:.25em .35em .25em 0;transition:opacity .2s;}
-    .chips a:hover{opacity:.9}
-    .updated{color:#666;font-size:14px;margin-top:10px}
-
-    /* ===== Publications ===== */
-    .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px}
-    .year-input{background:var(--chip-bg); border:1px solid var(--chip-bd); color:var(--chip-ink); padding:8px 10px; border-radius:10px; width:120px;}
-    .dash{color:#66788a}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{background:var(--tab-off-bg); color:var(--tab-off-ink); border:1px solid var(--tab-bd); border-radius:999px; padding:8px 12px; cursor:pointer; font-weight:700;}
-    .tab[aria-pressed="true"]{background:var(--tab-on-bg); color:var(--tab-on-ink); border-color:var(--tab-on-bg)}
-    .year{margin:18px 0 6px;font-size:20px;font-weight:800;color:var(--year)}
-    .publist{list-style:none;margin:0 0 8px 0;padding:0}
-    .pubitem{margin:12px 0}
-    .title{font-weight:800}
-    .title a{text-decoration:underline}
-    .venue{font-style:italic;color:var(--venue);margin-top:2px}
-    .authors{color:var(--authors);margin-top:2px}
-  </style>
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
   <!-- ===== NAV ===== -->
   <nav class="navbar" role="navigation" aria-label="Primary">
     <div class="nav-inner">
-      <a class="brand" href="#about">Hwang Jiwoo</a>
-      <div class="nav-actions">
+      <div class="nav-toprow">
+        <a class="brand" href="#about">Hwang Jiwoo</a>
         <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
           <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </button>
       </div>
-    </div>
-    <div class="nav-menu" id="navMenu">
-      <ul class="nav-list">
-        <li><a class="nav-link" href="#about">About</a></li>
-        <li><a class="nav-link" href="#publications">Publications</a></li>
-      </ul>
+
+      <!-- 모바일: 드롭다운 / 데스크톱: 오른쪽 가로 메뉴 -->
+      <div class="nav-menu" id="navMenu">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#about">About</a></li>
+          <li><a class="nav-link" href="#publications">Publications</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
@@ -111,7 +43,7 @@
       <div class="chips">
         <a href="https://scholar.google.co.kr/citations?hl=en&user=g8tiXdMAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
       </div>
-      <div class="updated">Updated 1 Aug, 2025</div>
+      <div class="updated">Updated 13 Aug, 2025</div>
     </section>
   </main>
 
@@ -119,6 +51,9 @@
   <section class="container page" id="menu_publications">
     <div class="card">
       <h1 id="publications">Publications</h1>
+      <p>
+        Equally contributed *, Corresponding Author +
+      </p>
       <div class="filters" aria-label="Publications filters">
         <input id="yearStart" class="year-input" type="number" inputmode="numeric" placeholder="Start" min="1900" max="2100" />
         <span class="dash">–</span>
@@ -136,7 +71,7 @@
 
   <script>
     /* ===== Config: repo paths ===== */
-    const PUB_DIR = 'assets/publications/';       // CSV & PDF 폴더
+    const PUB_DIR = 'assets/publications/';       // CSV & PDF directory
     const CSV_FILE = 'publications.csv';          // assets/publications/publications.csv
 
     /* ===== SPA Router ===== */
@@ -219,9 +154,6 @@
         try{
           const res = await fetch(url, { method:'HEAD', cache:'no-store' });
           if (res.ok) return url;
-          // 일부 서버가 HEAD를 막으면(희박) GET 1바이트 시도 (GitHub Pages는 보통 ok)
-          // const res2 = await fetch(url, { method:'GET', headers:{ 'Range':'bytes=0-0' } });
-          // if (res2.ok) return url;
           return null;
         }catch(_e){ return null; }
       })();
@@ -250,7 +182,7 @@
       for(const it of PUB.filtered){ (groups[it.Years] = groups[it.Years] || []).push(it); }
       const years=Object.keys(groups).sort((a,b)=>parseInt(b)-parseInt(a));
 
-      // 미리 현재 화면에 필요한 타이틀들의 PDF 존재여부 확인 (병렬)
+      // 현재 화면에 필요한 타이틀의 PDF 존재여부 확인
       const titles = [...new Set(PUB.filtered.map(x=>x.Title))];
       const existMap = new Map();
       await Promise.all(titles.map(async t=>{
@@ -292,7 +224,6 @@
     }
 
     function bindPublicationUI(){
-      // 타입 탭
       const tabs=document.querySelectorAll('.tab');
       tabs.forEach(btn=>{
         btn.addEventListener('click', async ()=>{
@@ -302,7 +233,6 @@
           await applyFilters();
         });
       });
-      // 연도 입력
       ['yearStart','yearEnd'].forEach(id=>{
         const el=document.getElementById(id);
         el.addEventListener('change', applyFilters);
