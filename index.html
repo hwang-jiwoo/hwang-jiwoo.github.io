@@ -10,14 +10,9 @@
   <meta name="description" content="A personal website for Hwang Jiwoo" />
   <style>
     :root{
-      --bg:#f8f9fa;
-      --ink:#222;
-      --brand:#ffffff;
-      --nav-bg:#2d3e50;
-      --link:#ffffff;
-      --link-hover:rgba(255,255,255,.85);
-      --card:#ffffff;
-      --shadow:0 2px 8px rgba(0,0,0,0.07);
+      --bg:#f8f9fa; --ink:#222; --brand:#ffffff; --nav-bg:#2d3e50;
+      --link:#ffffff; --link-hover:rgba(255,255,255,.85);
+      --card:#ffffff; --shadow:0 2px 8px rgba(0,0,0,0.07);
       --chip-bg:#f3f6fb; --chip-bd:#d9e2ef; --chip-ink:#102a43;
       --tab-on-bg:#203a59; --tab-on-ink:#fff; --tab-off-bg:#f3f6fb; --tab-off-ink:#102a43; --tab-bd:#d9e2ef;
       --venue:#2b465f; --authors:#243b53; --year:#183a5d;
@@ -33,35 +28,19 @@
       padding:12px 16px;
     }
     .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-    .brand{
-      font-weight:800; letter-spacing:.2px; color:var(--brand);
-      font-size:22px; line-height:1;
-    }
+    .brand{font-weight:800; letter-spacing:.2px; color:var(--brand); font-size:22px; line-height:1;}
     .nav-actions{display:flex; align-items:center; gap:8px}
-    .hamburger{
-      appearance:none; border:0; background:transparent; cursor:pointer; padding:8px; margin:-8px;
-    }
-    .hamburger .bar{
-      display:block; width:24px; height:2px; background:#fff; margin:5px 0; transition:transform .25s ease, opacity .25s ease;
-    }
+    .hamburger{appearance:none; border:0; background:transparent; cursor:pointer; padding:8px; margin:-8px;}
+    .hamburger .bar{display:block; width:24px; height:2px; background:#fff; margin:5px 0; transition:transform .25s ease, opacity .25s ease;}
     .hamburger[aria-expanded="true"] .bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
     .hamburger[aria-expanded="true"] .bar:nth-child(2){opacity:0}
     .hamburger[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
-    .nav-menu{
-      display:none;
-      background:var(--nav-bg);
-      border-top:1px solid rgba(255,255,255,.1);
-    }
+    .nav-menu{display:none;background:var(--nav-bg);border-top:1px solid rgba(255,255,255,.1);}
     .nav-menu.open{display:block}
     .nav-list{list-style:none;margin:0;padding:10px 16px;display:flex;flex-direction:column;gap:6px}
-    .nav-link{
-      color:var(--link); font-weight:700; font-size:18px; padding:10px 6px; display:block; border-radius:8px;
-    }
+    .nav-link{color:var(--link); font-weight:700; font-size:18px; padding:10px 6px; display:block; border-radius:8px;}
     .nav-link:hover{color:var(--link-hover)}
     .nav-link.active{outline:2px solid rgba(255,255,255,.25)}
-
-    /* Desktop nav */
     @media (min-width: 900px){
       .hamburger{display:none}
       .nav-menu{display:block;background:transparent;border-top:0}
@@ -71,47 +50,34 @@
     }
 
     /* ===== Layout ===== */
-    .container{
-      max-width:900px; margin:24px auto; padding:0 16px;
-    }
-    .card{
-      background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:24px;
-    }
+    .container{max-width:900px; margin:24px auto; padding:0 16px;}
+    .card{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:24px;}
     h1{font-size:28px; font-weight:800; margin:0 0 14px}
     @media (min-width:900px){ h1{font-size:34px} }
 
-    /* ===== SPA pages ===== */
+    /* ===== SPA ===== */
     .page{display:none}
     .page.active{display:block}
 
     /* ===== About ===== */
-    .chips a{
-      display:inline-block;background:#0077cc;color:#fff;padding:.45em 1em;border-radius:999px;margin:.25em .35em .25em 0;
-      transition:opacity .2s;
-    }
+    .chips a{display:inline-block;background:#0077cc;color:#fff;padding:.45em 1em;border-radius:999px;margin:.25em .35em .25em 0;transition:opacity .2s;}
     .chips a:hover{opacity:.9}
     .updated{color:#666;font-size:14px;margin-top:10px}
 
     /* ===== Publications ===== */
     .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px}
-    .year-input{
-      background:var(--chip-bg); border:1px solid var(--chip-bd); color:var(--chip-ink);
-      padding:8px 10px; border-radius:10px; width:120px;
-    }
+    .year-input{background:var(--chip-bg); border:1px solid var(--chip-bd); color:var(--chip-ink); padding:8px 10px; border-radius:10px; width:120px;}
     .dash{color:#66788a}
     .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{
-      background:var(--tab-off-bg); color:var(--tab-off-ink);
-      border:1px solid var(--tab-bd); border-radius:999px; padding:8px 12px; cursor:pointer; font-weight:700;
-    }
+    .tab{background:var(--tab-off-bg); color:var(--tab-off-ink); border:1px solid var(--tab-bd); border-radius:999px; padding:8px 12px; cursor:pointer; font-weight:700;}
     .tab[aria-pressed="true"]{background:var(--tab-on-bg); color:var(--tab-on-ink); border-color:var(--tab-on-bg)}
     .year{margin:18px 0 6px;font-size:20px;font-weight:800;color:var(--year)}
     .publist{list-style:none;margin:0 0 8px 0;padding:0}
     .pubitem{margin:12px 0}
     .title{font-weight:800}
+ “   .title a{text-decoration:underline}
     .venue{font-style:italic;color:var(--venue);margin-top:2px}
     .authors{color:var(--authors);margin-top:2px}
-
   </style>
 </head>
 <body>
@@ -145,7 +111,7 @@
       <div class="chips">
         <a href="https://scholar.google.co.kr/citations?hl=en&user=g8tiXdMAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
       </div>
-      <div class="updated">Updated 11 Aug, 2025</div>
+      <div class="updated">Updated 1 Aug, 2025</div>
     </section>
   </main>
 
@@ -153,8 +119,6 @@
   <section class="container page" id="menu_publications">
     <div class="card">
       <h1 id="publications">Publications</h1>
-
-      <!-- Filters: year range + type -->
       <div class="filters" aria-label="Publications filters">
         <input id="yearStart" class="year-input" type="number" inputmode="numeric" placeholder="Start" min="1900" max="2100" />
         <span class="dash">–</span>
@@ -166,13 +130,15 @@
           <button class="tab" data-type="Poster" aria-pressed="false">Poster</button>
         </div>
       </div>
-
-      <!-- Render area -->
       <div id="pubGroups"></div>
     </div>
   </section>
 
   <script>
+    /* ===== Config: repo paths ===== */
+    const PUB_DIR = 'assets/publications/';       // CSV & PDF 폴더
+    const CSV_FILE = 'publications.csv';          // assets/publications/publications.csv
+
     /* ===== SPA Router ===== */
     const PAGES = { about:'menu_home', publications:'menu_publications' };
     function showPageByHash(){
@@ -184,7 +150,6 @@
         const h = a.getAttribute('href').replace('#','');
         a.classList.toggle('active', h===hash);
       });
-      // close mobile menu on navigation
       closeMenu();
     }
     window.addEventListener('hashchange', showPageByHash);
@@ -192,17 +157,13 @@
     /* ===== Mobile Nav ===== */
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
-    function closeMenu(){
-      hamburger.setAttribute('aria-expanded','false');
-      navMenu.classList.remove('open');
-    }
+    function closeMenu(){ hamburger.setAttribute('aria-expanded','false'); navMenu.classList.remove('open'); }
     function toggleMenu(){
       const open = hamburger.getAttribute('aria-expanded') === 'true';
       hamburger.setAttribute('aria-expanded', String(!open));
       navMenu.classList.toggle('open', !open);
     }
     hamburger.addEventListener('click', toggleMenu);
-    // close if click outside (mobile)
     document.addEventListener('click', (e)=>{
       if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) closeMenu();
     });
@@ -242,12 +203,22 @@
     function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
     function normalizeRows(rows){
       return rows.map(r=>({
-        Types:r.Types, Years:(r.Years||'').replace(/[^\d]/g,''), Title:r.Title, Information:r.Information, Authors:r.Authors
+        Types:r.Types,
+        Years:(r.Years||'').replace(/[^\d]/g,''),
+        Title:r.Title,
+        Information:r.Information,
+        Authors:r.Authors
       })).filter(r=>r.Title && r.Years);
     }
     function computeYearRange(list){
       const ys=list.map(r=>parseInt(r.Years,10)).filter(n=>!isNaN(n));
       return ys.length?{min:Math.min(...ys),max:Math.max(...ys)}:{min:null,max:null};
+    }
+    // Title을 파일명으로 사용하는 PDF 링크 생성 (URL 인코딩)
+    function hrefFromTitle(title){
+      // GitHub Pages는 URL 인코딩된 파일명을 정상 제공
+      // (슬래시 / 등은 파일명에 사용하지 않는 것을 권장)
+      return PUB_DIR + encodeURIComponent(title) + '.pdf';
     }
     function renderGroups(){
       const wrap=document.getElementById('pubGroups'); wrap.innerHTML='';
@@ -259,8 +230,10 @@
         const ul=document.createElement('ul'); ul.className='publist';
         for(const it of groups[y]){
           const li=document.createElement('li'); li.className='pubitem';
+          const pdfHref = hrefFromTitle(it.Title);
+          const titleHTML = `<a href="${escapeHTML(pdfHref)}" target="_blank" rel="noopener">${escapeHTML(it.Title)}</a>`;
           li.innerHTML = `
-            <div class="title">${escapeHTML(it.Title)}</div>
+            <div class="title">${titleHTML}</div>
             <div class="venue">${escapeHTML(it.Information)}</div>
             <div class="authors">${escapeHTML(it.Authors)}</div>
           `;
@@ -282,9 +255,7 @@
       });
       renderGroups();
     }
-
     function bindPublicationUI(){
-      // Type tabs
       const tabs=document.querySelectorAll('.tab');
       tabs.forEach(btn=>{
         btn.addEventListener('click', ()=>{
@@ -294,23 +265,20 @@
           applyFilters();
         });
       });
-      // Year inputs
       ['yearStart','yearEnd'].forEach(id=>{
         const el=document.getElementById(id);
         el.addEventListener('change', applyFilters);
         el.addEventListener('keydown', e=>{ if(e.key==='Enter') applyFilters(); });
       });
     }
-
     async function initPublications(){
       try{
-        const res = await fetch('publications.csv', {cache:'no-store'});
+        const res = await fetch(PUB_DIR + CSV_FILE, {cache:'no-store'});
         if(!res.ok) return;
         const text = await res.text();
         const {headers,data} = parseTable(text);
         const needed=['Types','Years','Title','Information','Authors'];
         if(!needed.every(h=>headers.includes(h))) return;
-
         PUB.raw = normalizeRows(data);
         PUB.filtered=[...PUB.raw];
         PUB.years = computeYearRange(PUB.raw);
